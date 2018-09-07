@@ -1,7 +1,7 @@
 # Учебный проект «Код и Магия» [![Build status][travis-image]][travis-url]
 
 * Студент: [Максим Семенов](https://up.htmlacademy.ru/javascript/15/user/634763).
-* Наставник: `Неизвестно`.
+* Наставник: Игорь Тараканов.
 
 ---
 
