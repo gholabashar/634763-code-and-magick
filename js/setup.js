@@ -12,16 +12,15 @@ userDialog.classList.remove('hidden');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
 var similarListElement = userDialog.querySelector('.setup-similar-list');
 
-var getRandomI = function (min, max) {
-  var randomI = Math.floor(min + Math.random() * (max + 1 - min));
-  return randomI;
+var getRandomForWizzard = function (min, max) {
+  return Math.floor(Math.random() * (max + 1 - min) + min);
 };
 
 for (var i = 1; i <= wizardsAmount; i++) {
   wizards.push({
-    name: WIZARD_NAMES[getRandomI(0, WIZARD_NAMES.length - 1)] + WIZARD_SURNAMES[getRandomI(0, WIZARD_SURNAMES.length - 1)],
-    coatColor: COAT_COLORS[getRandomI(0, COAT_COLORS.length - 1)],
-    eyesColor: EYES_COLORS[getRandomI(0, EYES_COLORS.length - 1)]
+    name: WIZARD_NAMES[getRandomForWizzard(0, WIZARD_NAMES.length - 1)] + WIZARD_SURNAMES[getRandomForWizzard(0, WIZARD_SURNAMES.length - 1)],
+    coatColor: COAT_COLORS[getRandomForWizzard(0, COAT_COLORS.length - 1)],
+    eyesColor: EYES_COLORS[getRandomForWizzard(0, EYES_COLORS.length - 1)]
   });
 }
 
