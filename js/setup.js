@@ -28,15 +28,9 @@ var setupPlayerElements = document.querySelector('.setup-player').getElementsByT
 var setupUserName = setup.querySelector('.setup-user-name');
 setup.classList.add('hidden');
 
-var getRandomForWizzard = function (min, max) {
-  return Math.floor(Math.random() * (max + 1 - min) + min);
-};
-
-//
 var getRandomItemFromArray = function (arr) {
   return arr[Math.round(Math.random() * (arr.length - 1))];
 };
-//
 
 for (var i = 1; i <= wizardsAmount; i++) {
   wizards.push({
@@ -63,7 +57,7 @@ similarListElement.appendChild(fragment);
 userDialog.querySelector('.setup-similar').classList.remove('hidden');
 
 var onPopupEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE && setupUserName != document.activeElement) {
+  if (evt.keyCode === ESC_KEYCODE && setupUserName !== document.activeElement) {
     closePopup();
   }
 };
