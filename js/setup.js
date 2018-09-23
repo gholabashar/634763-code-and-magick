@@ -6,21 +6,43 @@ var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161
 var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 var wizardsAmount = 4;
 var wizards = [];
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 
 var userDialog = document.querySelector('.setup');
 userDialog.classList.remove('hidden');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
 var similarListElement = userDialog.querySelector('.setup-similar-list');
 
+var setup = document.querySelector('.setup');
+var setupOpen = document.querySelector('.setup-open');
+var setupClose = setup.querySelector('.setup-close');
+var setupSubmit = setup.querySelector('.setup-submit');
+var wizardForm = setup.querySelector('.setup-wizard-form');
+var setupWizard = setup.querySelector('.setup-wizard');
+var setupCoat = setup.querySelector('.wizard-coat');
+var setupEyes = setup.querySelector('.wizard-eyes');
+var setupFireball = setup.querySelector('.setup-fireball-wrap');
+var setupPlayerElements = document.querySelector('.setup-player').getElementsByTagName('input');
+var setupUserName = setup.querySelector('.setup-user-name');
+setup.classList.add('hidden');
+
 var getRandomForWizzard = function (min, max) {
   return Math.floor(Math.random() * (max + 1 - min) + min);
 };
 
+//
+var getRandomItemFromArray = function (arr) {
+  return arr[Math.round(Math.random() * (arr.length - 1))];
+};
+//
+
 for (var i = 1; i <= wizardsAmount; i++) {
   wizards.push({
-    name: WIZARD_NAMES[getRandomForWizzard(0, WIZARD_NAMES.length - 1)] + WIZARD_SURNAMES[getRandomForWizzard(0, WIZARD_SURNAMES.length - 1)],
-    coatColor: COAT_COLORS[getRandomForWizzard(0, COAT_COLORS.length - 1)],
-    eyesColor: EYES_COLORS[getRandomForWizzard(0, EYES_COLORS.length - 1)]
+    name: getRandomItemFromArray(WIZARD_NAMES) + getRandomItemFromArray(WIZARD_SURNAMES),
+    coatColor: getRandomItemFromArray(COAT_COLORS),
+    eyesColor: getRandomItemFromArray(EYES_COLORS)
   });
 }
 
@@ -39,3 +61,70 @@ for (var j = 0; j < wizards.length; j++) {
 similarListElement.appendChild(fragment);
 
 userDialog.querySelector('.setup-similar').classList.remove('hidden');
+
+var onPopupEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE && setupUserName != document.activeElement) {
+    closePopup();
+  }
+};
+
+var onSetupSubmitClick = function () {
+  wizardForm.submit();
+};
+
+var onSetupSubmitPress = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    wizardForm.submit();
+  }
+};
+
+var openPopup = function () {
+  setup.classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEscPress);
+  setupSubmit.addEventListener('click', onSetupSubmitClick);
+  setupSubmit.addEventListener('keydown', onSetupSubmitPress);
+};
+
+var closePopup = function () {
+  setup.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
+setupOpen.addEventListener('click', function () {
+  openPopup();
+});
+
+setupOpen.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    openPopup();
+  }
+});
+
+setupClose.addEventListener('click', function () {
+  closePopup();
+});
+
+setupClose.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closePopup();
+  }
+});
+
+setupCoat.addEventListener('click', function () {
+  setupPlayerElements[0].value = getRandomItemFromArray(COAT_COLORS);
+  setupWizard.querySelector('.wizard-coat').style.fill = setupPlayerElements[0].value;
+});
+
+setupEyes.addEventListener('click', function () {
+  setupPlayerElements[1].value = getRandomItemFromArray(EYES_COLORS);
+  setupWizard.querySelector('.wizard-eyes').style.fill = setupPlayerElements[1].value;
+});
+
+setupFireball.addEventListener('click', function () {
+  setupPlayerElements[2].value = getRandomItemFromArray(FIREBALL_COLORS);
+  setupFireball.style.background = setupPlayerElements[2].value;
+});
+
+setupUserName.addEventListener('change', function () {
+  setupSubmit.disabled = !setupUserName.checkValidity();
+});
