@@ -28,8 +28,6 @@ var setupPlayerElements = document.querySelector('.setup-player').getElementsByT
 var setupUserName = setup.querySelector('.setup-user-name');
 setup.classList.add('hidden');
 
-console.log(setup.style.top);
-
 var getRandomItemFromArray = function (arr) {
   return arr[Math.round(Math.random() * (arr.length - 1))];
 };
