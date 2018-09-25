@@ -28,6 +28,8 @@ var setupPlayerElements = document.querySelector('.setup-player').getElementsByT
 var setupUserName = setup.querySelector('.setup-user-name');
 setup.classList.add('hidden');
 
+console.log(setup.style.top);
+
 var getRandomItemFromArray = function (arr) {
   return arr[Math.round(Math.random() * (arr.length - 1))];
 };
@@ -82,6 +84,7 @@ var openPopup = function () {
 var closePopup = function () {
   setup.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
+  userDialog.removeAttribute('style');
 };
 
 setupOpen.addEventListener('click', function () {
