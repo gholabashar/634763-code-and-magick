@@ -9,7 +9,6 @@
   var setupCoat = setup.querySelector('.wizard-coat');
   var setupEyes = setup.querySelector('.wizard-eyes');
   var setupFireball = setup.querySelector('.setup-fireball-wrap');
-  var setupWizard = setup.querySelector('.setup-wizard');
   var setupPlayerElements = document.querySelector('.setup-player').getElementsByTagName('input');
 
   setupCoat.addEventListener('click', function () {
