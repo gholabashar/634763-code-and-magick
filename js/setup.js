@@ -13,7 +13,6 @@
   var setupClose = setup.querySelector('.setup-close');
   var setupSubmit = setup.querySelector('.setup-submit');
   var wizardForm = setup.querySelector('.setup-wizard-form');
-  var setupWizard = setup.querySelector('.setup-wizard');
 
   var setupUserName = setup.querySelector('.setup-user-name');
   setup.classList.add('hidden');

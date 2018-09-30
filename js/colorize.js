@@ -9,16 +9,17 @@
   var setupCoat = setup.querySelector('.wizard-coat');
   var setupEyes = setup.querySelector('.wizard-eyes');
   var setupFireball = setup.querySelector('.setup-fireball-wrap');
+  var setupWizard = setup.querySelector('.setup-wizard');
   var setupPlayerElements = document.querySelector('.setup-player').getElementsByTagName('input');
 
   setupCoat.addEventListener('click', function () {
     setupPlayerElements[0].value = window.util.getRandomItemFromArray(COAT_COLORS);
-    setupWizard.querySelector('.wizard-coat').style.fill = setupPlayerElements[0].value;
+    setupCoat.style.fill = setupPlayerElements[0].value;
   });
 
   setupEyes.addEventListener('click', function () {
     setupPlayerElements[1].value = window.util.getRandomItemFromArray(EYES_COLORS);
-    setupWizard.querySelector('.wizard-eyes').style.fill = setupPlayerElements[1].value;
+    setupEyes.style.fill = setupPlayerElements[1].value;
   });
 
   setupFireball.addEventListener('click', function () {
