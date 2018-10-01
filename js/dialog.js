@@ -2,36 +2,48 @@
 
 (function () {
 
-  var setupDialogElement = document.querySelector('.setup');
-  var dialogHandler = setupDialogElement.querySelector('.upload');
+  var setupDialog = document.querySelector('.setup');
+  var setupDialogMove = setupDialog.querySelector('.upload');
 
-  dialogHandler.addEventListener('mousedown', function (evt) {
+  var onMouseDown = function (evt) {
     evt.preventDefault();
 
-    var startCoords = {
+    var startPoints = {
       x: evt.clientX,
       y: evt.clientY
     };
 
-    var dragged = false;
+    var isMoved = false;
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
-      dragged = true;
+      isMoved = true;
 
-      var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
+      var currentPoints = {
+        x: startPoints.x - moveEvt.clientX,
+        y: startPoints.y - moveEvt.clientY
       };
 
-      startCoords = {
+      startPoints = {
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
 
-      setupDialogElement.style.top = (setupDialogElement.offsetTop - shift.y) + 'px';
-      setupDialogElement.style.left = (setupDialogElement.offsetLeft - shift.x) + 'px';
+      var currentY = setupDialog.offsetTop - currentPoints.y;
+      var currentX = setupDialog.offsetLeft - currentPoints.x;
+      var stopRightX = document.body.offsetWidth - setupDialog.offsetWidth
+        / 2;
+      var stopLeftX = setupDialog.offsetWidth / 2;
+      var stopBottomY = document.body.offsetHeight - setupDialog.offsetHeight
+        / 3;
 
+      if (currentY > 0 && currentY < stopBottomY) {
+        setupDialog.style.top = currentY + 'px';
+      }
+
+      if (currentX < stopRightX && currentX > stopLeftX) {
+        setupDialog.style.left = currentX + 'px';
+      }
     };
 
     var onMouseUp = function (upEvt) {
@@ -40,51 +52,20 @@
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
 
-      if (dragged) {
-        var onClickPreventDefault = function (dragEvt) {
-          dragEvt.preventDefault();
-          dialogHandler.removeEventListener('click', onClickPreventDefault);
-        };
-        dialogHandler.addEventListener('click', onClickPreventDefault);
-      }
+      var clickPreventHandler = function (clickEvt) {
+        clickEvt.preventDefault();
+        setupDialogMove.removeEventListener('click', clickPreventHandler);
+      };
 
+      if (isMoved) {
+        setupDialogMove.addEventListener('click', clickPreventHandler);
+      }
     };
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-  });
+  };
 
-  var shopElement = document.querySelector('.setup-artifacts-shop');
-  var draggedItem = null;
-
-  shopElement.addEventListener('dragstart', function (evt) {
-    if (evt.target.tagName.toLowerCase() === 'img') {
-      draggedItem = evt.target;
-      evt.dataTransfer.setData('text/plain', evt.target.alt);
-    }
-  });
-
-  var artifactsElement = document.querySelector('.setup-artifacts');
-
-  artifactsElement.addEventListener('dragover', function (evt) {
-    evt.preventDefault();
-    return false;
-  });
-
-  artifactsElement.addEventListener('drop', function (evt) {
-    evt.target.style.backgroundColor = '';
-    evt.target.appendChild(draggedItem);
-  });
-
-
-  artifactsElement.addEventListener('dragenter', function (evt) {
-    evt.target.style.backgroundColor = 'yellow';
-    evt.preventDefault();
-  });
-
-  artifactsElement.addEventListener('dragleave', function (evt) {
-    evt.target.style.backgroundColor = '';
-    evt.preventDefault();
-  });
+  setupDialogMove.addEventListener('mousedown', onMouseDown);
 
 })();
