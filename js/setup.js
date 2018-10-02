@@ -1,91 +1,123 @@
 'use strict';
 (function () {
   var wizardsAmount = 4;
-  var wizards = [];
 
-  var userDialog = document.querySelector('.setup');
-  userDialog.classList.remove('hidden');
-  var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
-  var similarListElement = userDialog.querySelector('.setup-similar-list');
+  var wizardSetup = document.querySelector('.setup');
+  var wizardSetupClose = wizardSetup.querySelector('.setup-close');
+  var wizardSetupName = wizardSetup.querySelector('.setup-user-name');
+  var wizardSetupForm = wizardSetup.querySelector('.setup-wizard-form');
+  var wizardPerson = document.querySelector('.setup-wizard');
 
-  var setup = document.querySelector('.setup');
-  var setupOpen = document.querySelector('.setup-open');
-  var setupClose = setup.querySelector('.setup-close');
-  var setupSubmit = setup.querySelector('.setup-submit');
-  var wizardForm = setup.querySelector('.setup-wizard-form');
+  var wizardSetupControl = document.querySelector('.setup-open');
 
-  var setupUserName = setup.querySelector('.setup-user-name');
-  setup.classList.add('hidden');
+  var similarSetup = document.querySelector('.setup-similar');
+  var similarWizards = document.querySelector('.setup-similar-list');
+  var similarWizardTemplate = document.querySelector('#similar-wizard-template')
+    .content;
+  var similarWizardDraft = similarWizardTemplate
+    .querySelector('.setup-similar-item');
 
-  for (var i = 1; i <= wizardsAmount; i++) {
-    wizards.push({
-      name: window.util.getRandomItemFromArray(window.util.WIZARD_NAMES) + window.util.getRandomItemFromArray(window.util.WIZARD_SURNAMES),
-      coatColor: window.util.getRandomItemFromArray(window.util.COAT_COLORS),
-      eyesColor: window.util.getRandomItemFromArray(window.util.EYES_COLORS)
-    });
-  }
+  var createWizard = function (wizard) {
+    var wizardItem = similarWizardDraft.cloneNode(true);
 
-  var renderWizard = function (wizard) {
-    var wizardElement = similarWizardTemplate.cloneNode(true);
-    wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
-    wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor;
-    wizardElement.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
-    return wizardElement;
+    if (wizard) {
+      wizardItem.querySelector('.setup-similar-label').textContent = wizard.name;
+      wizardItem.querySelector('.wizard-coat').style.fill = wizard.colorCoat;
+      wizardItem.querySelector('.wizard-eyes').style.fill = wizard.colorEyes;
+    }
+
+    return wizardItem;
   };
 
-  var fragment = document.createDocumentFragment();
-  for (var j = 0; j < wizards.length; j++) {
-    fragment.appendChild(renderWizard(wizards[j]));
-  }
-  similarListElement.appendChild(fragment);
+  var renderSimilarWizards = function () {
+    var getWizards = function (data) {
+      var wizards = data.slice(0, wizardsAmount);
 
-  userDialog.querySelector('.setup-similar').classList.remove('hidden');
+      similarWizards.textContent = '';
 
-  var onPopupEscPress = function (evt) {
-    if (setupUserName !== document.activeElement) {
-      window.util.isEscEvent(evt, closePopup);
+      wizards.forEach(function () {
+        similarWizards.appendChild(createWizard(window.util.getRandomItemFromArray(data)));
+      });
+    };
+
+    var renderError = function (error) {
+      window.util.showError(error);
+    };
+
+    window.backend.load(getWizards, renderError);
+
+    similarSetup.classList.remove('hidden');
+  };
+
+  var showSetup = function () {
+    wizardSetup.classList.remove('hidden');
+    wizardSetupClose.focus();
+    addSetupWindowListeners();
+    renderSimilarWizards();
+  };
+
+  var hideSetup = function () {
+    wizardSetup.classList.add('hidden');
+    removeSetupWindowListeners();
+    window.util.hideError();
+  };
+
+  var renderError = function (error) {
+    window.util.showError(error);
+  };
+
+  var setupControlClickHandler = function () {
+    showSetup();
+  };
+
+  var setupCloseClickHandler = function () {
+    hideSetup();
+  };
+
+  var setupControlKeydownHandler = function (evt) {
+    window.util.isEnterEvent(evt, showSetup);
+  };
+
+  var setupCloseEnterHandler = function (evt) {
+    window.util.isEscEvent(evt, hideSetup);
+  };
+
+  var setupCloseEscHandler = function (evt) {
+    if (evt.target !== wizardSetupName) {
+      window.util.isEscEvent(evt, hideSetup);
     }
   };
 
-  var onSetupSubmitClick = function () {
-    wizardForm.submit();
+  var wizardSetupControlListeners = function () {
+    wizardSetupControl.addEventListener('click', setupControlClickHandler);
+    wizardSetupControl.addEventListener('keydown', setupControlKeydownHandler);
   };
 
-  var onSetupSubmitPress = function (evt) {
-    window.util.isEnterEvent(evt, wizardForm.submit);
+  var initSetupControls = function () {
+    wizardSetupControlListeners();
   };
 
-  var openPopup = function () {
-    setup.classList.remove('hidden');
-    document.addEventListener('keydown', onPopupEscPress);
-    setupSubmit.addEventListener('click', onSetupSubmitClick);
-    setupSubmit.addEventListener('keydown', onSetupSubmitPress);
+  var wizardSetupFormSubmitHandler = function (evt) {
+    evt.preventDefault();
+
+    window.backend.save(new FormData(wizardSetupForm), hideSetup, renderError);
   };
 
-  var closePopup = function () {
-    setup.classList.add('hidden');
-    document.removeEventListener('keydown', onPopupEscPress);
-    userDialog.removeAttribute('style');
+  var addSetupWindowListeners = function () {
+    wizardSetup.addEventListener('keydown', setupCloseEscHandler);
+    wizardSetupClose.addEventListener('click', setupCloseClickHandler);
+    wizardSetupClose.addEventListener('keydown', setupCloseEnterHandler);
+    wizardSetupForm.addEventListener('submit', wizardSetupFormSubmitHandler);
   };
 
-  setupOpen.addEventListener('click', function () {
-    openPopup();
-  });
+  var removeSetupWindowListeners = function () {
+    wizardSetup.removeEventListener('keydown', setupCloseEscHandler);
+    wizardSetupClose.removeEventListener('click', setupCloseClickHandler);
+    wizardSetupClose.removeEventListener('keydown', setupCloseEnterHandler);
+    wizardSetup.removeAttribute('style');
+    wizardSetupForm.removeEventListener('submit', wizardSetupFormSubmitHandler);
+  };
 
-  setupOpen.addEventListener('keydown', function (evt) {
-    window.util.isEnterEvent(evt, openPopup);
-  });
+  initSetupControls();
 
-  setupClose.addEventListener('click', function () {
-    closePopup();
-  });
-
-  setupClose.addEventListener('keydown', function (evt) {
-    window.util.isEnterEvent(evt, closePopup);
-  });
-
-
-  setupUserName.addEventListener('change', function () {
-    setupSubmit.disabled = !setupUserName.checkValidity();
-  });
 })();

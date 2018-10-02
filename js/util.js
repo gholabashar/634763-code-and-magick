@@ -1,34 +1,80 @@
 'use strict';
 
-window.util = (function () {
-  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
-  var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
-  var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
-  var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
-  var WIZARD_NAMES = ['Иван ', 'Хуан Себастьян ', 'Мария ', 'Кристоф ', 'Виктор ', 'Юлия ', 'Люпита ', 'Вашингтон '];
-  var WIZARD_SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
+(function () {
+
+  var KeyCode = {
+    ENTER: 13,
+    ESC: 27
+  };
+
+  var Status = {
+    SUCCESS: 200,
+    ERROR_REQUEST: 400,
+    ERROR_NOT_FOUND: 404,
+    ERROR_SERVER: 500
+  };
 
   var getRandomItemFromArray = function (arr) {
     return arr[Math.round(Math.random() * (arr.length - 1))];
   };
 
-  return {
-    isEscEvent: function (evt, action) {
-      if (evt.keyCode === ESC_KEYCODE) {
-        action();
-      }
-    },
-    isEnterEvent: function (evt, action) {
-      if (evt.keyCode === ENTER_KEYCODE) {
-        action();
-      }
-    },
-    getRandomItemFromArray: getRandomItemFromArray,
-    COAT_COLORS: COAT_COLORS,
-    EYES_COLORS: EYES_COLORS,
-    FIREBALL_COLORS: FIREBALL_COLORS,
-    WIZARD_NAMES: WIZARD_NAMES,
-    WIZARD_SURNAMES: WIZARD_SURNAMES
+  var isEscEvent = function (evt, action) {
+    if (evt.keyCode === KeyCode.ESC) {
+      action();
+    }
   };
+
+  var isEnterEvent = function (evt, action) {
+    if (evt.keyCode === KeyCode.ENTER) {
+      action();
+    }
+  };
+
+  var showError = function (text) {
+    var popup = document.createElement('div');
+
+    popup.classList.add('error');
+    popup.textContent = text;
+
+    document.body.appendChild(popup);
+  };
+
+  var hideError = function () {
+    var error = document.querySelector('.error');
+
+    if (error) {
+      error.remove();
+    }
+  };
+
+  var statusCodeCB = function (xhr, successCallback, errorCallback) {
+
+    switch (xhr.status) {
+      case Status.SUCCESS:
+        successCallback(xhr.response);
+        break;
+      case Status.ERROR_REQUEST:
+        errorCallback('Ошибка запроса');
+        break;
+      case Status.ERROR_NOT_FOUND:
+        errorCallback('Не найдено');
+        break;
+      case Status.ERROR_SERVER:
+        errorCallback('Внутренняя ошибка сервера');
+        break;
+      default:
+        errorCallback('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+    }
+  };
+
+  window.util = {
+    isEscEvent: isEscEvent,
+    isEnterEvent: isEnterEvent,
+    getRandomItemFromArray: getRandomItemFromArray,
+    KeyCode: KeyCode,
+    showError: showError,
+    hideError: hideError,
+    statusCodeCB: statusCodeCB
+  };
+
 })();

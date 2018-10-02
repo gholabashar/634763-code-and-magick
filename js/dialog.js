@@ -52,13 +52,13 @@
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
 
-      var clickPreventHandler = function (clickEvt) {
+      var onClickPrevent = function (clickEvt) {
         clickEvt.preventDefault();
-        setupDialogMove.removeEventListener('click', clickPreventHandler);
+        setupDialogMove.removeEventListener('click', onClickPrevent);
       };
 
       if (isMoved) {
-        setupDialogMove.addEventListener('click', clickPreventHandler);
+        setupDialogMove.addEventListener('click', onClickPrevent);
       }
     };
 

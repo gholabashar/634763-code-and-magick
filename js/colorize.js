@@ -9,21 +9,24 @@
   var setupCoat = setup.querySelector('.wizard-coat');
   var setupEyes = setup.querySelector('.wizard-eyes');
   var setupFireball = setup.querySelector('.setup-fireball-wrap');
-  var setupPlayerElements = document.querySelector('.setup-player').getElementsByTagName('input');
+  var setupForm = setup.querySelector('.setup-wizard-form');
+  var setupCoatInput = setupForm.querySelector('[name=coat-color]');
+  var setupEyesInput = setupForm.querySelector('[name=eyes-color]');
+  var setupFireballlInput = setupForm.querySelector('[name=fireball-color]');
 
   setupCoat.addEventListener('click', function () {
-    setupPlayerElements[0].value = window.util.getRandomItemFromArray(COAT_COLORS);
-    setupCoat.style.fill = setupPlayerElements[0].value;
+    setupCoatInput.value = window.util.getRandomItemFromArray(COAT_COLORS);
+    setupCoat.style.fill = setupCoatInput.value;
   });
 
   setupEyes.addEventListener('click', function () {
-    setupPlayerElements[1].value = window.util.getRandomItemFromArray(EYES_COLORS);
-    setupEyes.style.fill = setupPlayerElements[1].value;
+    setupEyesInput.value = window.util.getRandomItemFromArray(EYES_COLORS);
+    setupEyes.style.fill = setupEyesInput.value;
   });
 
   setupFireball.addEventListener('click', function () {
-    setupPlayerElements[2].value = window.util.getRandomItemFromArray(FIREBALL_COLORS);
-    setupFireball.style.background = setupPlayerElements[2].value;
+    setupFireballlInput.value = window.util.getRandomItemFromArray(FIREBALL_COLORS);
+    setupFireball.style.background = setupFireballlInput.value;
   });
 
 })();
