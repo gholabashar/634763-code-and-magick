@@ -6,8 +6,6 @@
   var wizardSetupClose = wizardSetup.querySelector('.setup-close');
   var wizardSetupName = wizardSetup.querySelector('.setup-user-name');
   var wizardSetupForm = wizardSetup.querySelector('.setup-wizard-form');
-  var wizardPerson = document.querySelector('.setup-wizard');
-
   var wizardSetupControl = document.querySelector('.setup-open');
 
   var similarSetup = document.querySelector('.setup-similar');
